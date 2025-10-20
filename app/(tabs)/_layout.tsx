@@ -2,9 +2,9 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Home, Ticket, User } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -16,18 +16,35 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
+
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, size }) => <Home size={size} color={color}
+          // tabBarIcon: ({ color }) => <IconSymbol size={25} name="house.fill" color={color} 
+
+          />,
         }}
       />
+          
       <Tabs.Screen
-        name="explore"
+        name="tickets"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Tickets',
+          tabBarIcon: ({ color, size }) => <Ticket size={size} color={color}
+          // tabBarIcon: ({ color }) => <IconSymbol size={25} name="paperplane.fill" color={color} 
+          />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, size }) => <User size={size} color={color}
+          // tabBarIcon: ({ color }) => <IconSymbol size={25} name="person.fill" color={color} 
+          />,
         }}
       />
     </Tabs>
