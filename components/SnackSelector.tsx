@@ -1,6 +1,6 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useState } from 'react';
 import { Minus, Plus } from 'lucide-react-native';
+import { useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface Snack {
   id: string;
@@ -13,25 +13,31 @@ const snacks: Snack[] = [
   {
     id: '1',
     name: 'Popcorn (Large)',
-    price: 15000,
+    price: 5000,
     image: 'https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
   {
     id: '2',
-    name: 'Coca Cola (500ml)',
-    price: 5000,
-    image: 'https://images.pexels.com/photos/2983100/pexels-photo-2983100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    name: 'Popcorn (Caramel)',
+    price: 7000,
+    image: 'https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
   {
     id: '3',
-    name: 'Nachos with Cheese',
-    price: 12000,
-    image: 'https://images.pexels.com/photos/1200348/pexels-photo-1200348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    name: 'Pepsi ',
+    price: 3000,
+    image: 'https://images.pexels.com/photos/2983100/pexels-photo-2983100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
   {
     id: '4',
-    name: 'Hot Dog',
-    price: 8000,
+    name: 'Nivana Water',
+    price: 3000,
+    image: 'https://images.pexels.com/photos/1200348/pexels-photo-1200348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+  },
+  {
+    id: '5',
+    name: 'Sting',
+    price: 3000,
     image: 'https://images.pexels.com/photos/4518656/pexels-photo-4518656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   },
 ];
