@@ -1,4 +1,3 @@
-import ScreenBackButton from "@/components/ScreenBackButton";
 import { useState } from "react";
 import {
   Dimensions,
@@ -93,7 +92,6 @@ export default function SeatMap({ onSeatsChange }: SeatMapProps) {
 
   return (
     <View style={styles.container}>
-      <ScreenBackButton />
       <Svg height={30} width="100%" viewBox={`0 0 ${width} 30`}>
         <Path
           d={`M 0,30 Q ${width / 2},0 ${width},30 L ${width},30 L 0,30 Z`}

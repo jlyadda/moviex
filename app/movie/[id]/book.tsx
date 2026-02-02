@@ -1,3 +1,4 @@
+import ScreenBackButton from "@/components/ScreenBackButton";
 import SeatMap from "@/components/SeatMap";
 import SnackSelector from "@/components/SnackSelector";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -9,7 +10,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { database } from "../../../firebaseConfig";
 
@@ -118,8 +119,10 @@ export default function BookingScreen() {
 
   return (
     <View style={styles.container}>
+      <ScreenBackButton />
       <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
       <Stack.Screen options={{ headerShown: false }} />
+
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
@@ -233,18 +236,48 @@ export default function BookingScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8f9fa" },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  content: { padding: 20, paddingBottom: 0 },
-  poster: { width: "100%", height: 260, borderRadius: 12, marginBottom: 12 },
-  title: { fontSize: 20, fontWeight: "700", marginBottom: 12 },
+  container: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+  },
+
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  content: {
+    padding: 20,
+    paddingBottom: 0,
+    marginTop: 40,
+  },
+
+  poster: {
+    width: "100%",
+    height: 260,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 12,
+  },
+
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
     marginTop: 12,
     marginBottom: 8,
   },
-  datesContainer: { paddingBottom: 12 },
+
+  datesContainer: {
+    paddingBottom: 12,
+    marginTop: 4,
+  },
+
   dateItem: {
     width: 60,
     height: 80,
@@ -255,11 +288,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 2,
   },
-  selectedDate: { backgroundColor: "#e63946" },
-  dateDay: { fontSize: 14, color: "#6c757d" },
-  dateNumber: { fontSize: 18, fontWeight: "600", color: "#212529" },
-  dateMonth: { fontSize: 12, color: "#6c757d" },
-  timesContainer: { flexDirection: "row", flexWrap: "wrap" },
+
+  selectedDate: {
+    backgroundColor: "#e63946",
+  },
+
+  dateDay: {
+    fontSize: 14,
+    color: "#6c757d",
+  },
+
+  dateNumber: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#212529",
+  },
+  dateMonth: {
+    fontSize: 12,
+    color: "#6c757d",
+  },
+  timesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
   timeItem: {
     paddingVertical: 10,
     paddingHorizontal: 15,

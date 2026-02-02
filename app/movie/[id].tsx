@@ -6,6 +6,7 @@ import { Calendar, Clock, Star, Users } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   Dimensions,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -14,9 +15,11 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Button, ContextMenu, Host } from "@expo/ui/swift-ui";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { database } from "../../firebaseConfig";
 
 // Mock dates (previous data remains the same)
@@ -39,6 +42,7 @@ export default function MovieDetailScreen() {
   const id = String(params.id || "");
   const [movie, setMovie] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
 
   // Booking state moved to a dedicated booking screen (`/movie/[id]/book`).
   // The movie details screen no longer handles date/time/seat selection.
@@ -124,6 +128,40 @@ export default function MovieDetailScreen() {
             >
               <Text style={styles.backBtnText}>‹</Text>
             </TouchableOpacity>
+            <Animated.View style={styles.iconButton}>
+              {Platform.OS === "ios" ? (
+                <Host matchContents>
+                  <ContextMenu>
+                    <ContextMenu.Items>
+                      <Button
+                        variant="bordered"
+                        systemImage="heart"
+                        onPress={() => console.log("Pressed2")}
+                      >
+                        Love it
+                      </Button>
+                    </ContextMenu.Items>
+                    <ContextMenu.Trigger>
+                      <Button variant="bordered">Show Menu</Button>
+                    </ContextMenu.Trigger>
+                  </ContextMenu>
+                </Host>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsLiked(!isLiked);
+                  }}
+                >
+                  {isLiked ? (
+                    <Animated.View entering={ZoomIn.springify()}>
+                      <Ionicons name="heart" size={24} color="#fff" />
+                    </Animated.View>
+                  ) : (
+                    <Ionicons name="heart-outline" size={24} color="#fff" />
+                  )}
+                </TouchableOpacity>
+              )}
+            </Animated.View>
           </View>
 
           <View style={styles.contentContainer}>
@@ -204,13 +242,13 @@ export default function MovieDetailScreen() {
             </Animated.View>
           </View>
         </ScrollView>
-        <View style={{ marginBottom: 20, width: "90%", alignSelf: "center" }}>
+        <View style={{ marginBottom: 20, width: "50%", alignSelf: "center" }}>
           <TouchableOpacity
             style={[
               styles.bookButton,
               {
                 alignSelf: "stretch",
-                marginTop: 8,
+                marginTop: 4,
                 marginBottom: 16,
                 alignContent: "center",
               },
@@ -244,6 +282,17 @@ const styles = StyleSheet.create({
     // left: 0,
     // right: 0,
     // zIndex: 0,
+  },
+  iconButton: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   coverImage: {
     width: width,
@@ -564,6 +613,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     fontFamily: "Poppins-SemiBold",
+    alignSelf: "center",
   },
   errorContainer: {
     flex: 1,

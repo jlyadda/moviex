@@ -1,24 +1,29 @@
 import { comingSoonMovies, nowShowingMovies } from "@/assets/data/movies";
+import HomeScreenHeader from "@/components/HomeScreenHeader";
 import MovieCategoryHeader from "@/components/MovieCategoryHeader";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { onValue, ref } from "firebase/database";
-import { AlertCircle, Clock, Heart, Search, Star } from "lucide-react-native";
+import { AlertCircle, Clock, Heart, Star } from "lucide-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import Animated, { FadeInRight } from "react-native-reanimated";
+import Animated, {
+  FadeInRight,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { database } from "../../firebaseConfig";
 
 export default function HomeScreen() {
+  const scrollOffset = useSharedValue(0);
   const [greeting, setGreeting] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
@@ -26,6 +31,12 @@ export default function HomeScreen() {
   const [data, setData] = useState(null);
   const [nowShowing, setNowShowing] = useState<any[]>(nowShowingMovies);
   const [comingSoon, setComingSoon] = useState<any[]>(comingSoonMovies);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollOffset.value = event.contentOffset.y;
+    },
+  });
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -108,11 +119,15 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+      >
         <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
 
         <View style={styles.header}>
-          <View>
+          <View style={{ flex: 1, marginTop: 14 }}>
             <Text style={styles.greeting}>
               {greeting}
               <Text style={styles.username}> Jonathan</Text>
@@ -135,14 +150,11 @@ export default function HomeScreen() {
         </View>
 
         {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Search size={20} color="#999" />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search movies..."
-            placeholderTextColor="#999"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
+        <View style={{}}>
+          <HomeScreenHeader
+            scrollOffset={scrollOffset}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         </View>
 
@@ -351,7 +363,7 @@ export default function HomeScreen() {
             </Animated.View>
           ))}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 }
@@ -360,6 +372,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f9fa",
+    // marginTop: 0,
   },
   header: {
     flexDirection: "row",
