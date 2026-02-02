@@ -153,11 +153,11 @@ export default function MovieDetailScreen() {
                   <Text style={styles.infoText}>{movie.duration}</Text>
                 </View>
                 {/* Join genres with a centered dot for nicer display */}
-                <Text style={styles.genre}>
+                {/* <Text style={styles.genre}>
                   {Array.isArray(movie.genre)
                     ? movie.genre.join(" \u2022 ")
                     : movie.genre}
-                </Text>
+                </Text> */}
               </View>
 
               <View style={styles.detailsContainer}>
@@ -201,26 +201,30 @@ export default function MovieDetailScreen() {
                 <Text style={styles.sectionTitle}>Synopsis</Text>
                 <Text style={styles.synopsisText}>{movie.synopsis}</Text>
               </View>
-
-              <View style={{ marginBottom: 20 }}>
-                <TouchableOpacity
-                  style={[
-                    styles.bookButton,
-                    { alignSelf: "stretch", marginTop: 8, marginBottom: 16 },
-                  ]}
-                  onPress={() =>
-                    router.push({
-                      pathname: "/movie/[id]/book",
-                      params: { id: movie.id },
-                    })
-                  }
-                >
-                  <Text style={styles.bookButtonText}>Get Tickets</Text>
-                </TouchableOpacity>
-              </View>
             </Animated.View>
           </View>
         </ScrollView>
+        <View style={{ marginBottom: 20, width: "90%", alignSelf: "center" }}>
+          <TouchableOpacity
+            style={[
+              styles.bookButton,
+              {
+                alignSelf: "stretch",
+                marginTop: 8,
+                marginBottom: 16,
+                alignContent: "center",
+              },
+            ]}
+            onPress={() =>
+              router.push({
+                pathname: "/movie/[id]/book",
+                params: { id: movie.id },
+              })
+            }
+          >
+            <Text style={styles.bookButtonText}>Get Tickets</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
