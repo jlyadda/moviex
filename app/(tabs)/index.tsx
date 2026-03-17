@@ -7,6 +7,7 @@ import { onValue, ref } from "firebase/database";
 import { AlertCircle, Clock, Heart, Star } from "lucide-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -119,85 +120,45 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
+
+      <View style={styles.header}>
+        <View style={{ flex: 1, marginTop: 2 }}>
+          <Text style={styles.greeting}>
+            {greeting}
+            <Text style={styles.username}> Jonathan</Text>
+          </Text>
+          <Text style={styles.letsBook}>Let&apos;s book your next movie</Text>
+        </View>
+        <TouchableOpacity style={styles.ProfilePicture}>
+          <Image
+            source={{
+              uri: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1160&auto=format&fit=crop",
+            }}
+            style={{
+              width: "100%",
+              height: "100%",
+              overflow: "hidden",
+              borderRadius: 12,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
       >
-        <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
-
-        <View style={styles.header}>
-          <View style={{ flex: 1, marginTop: 14 }}>
-            <Text style={styles.greeting}>
-              {greeting}
-              <Text style={styles.username}> Jonathan</Text>
-            </Text>
-            <Text style={styles.letsBook}>Let&apos;s book your next movie</Text>
-          </View>
-          <TouchableOpacity style={styles.ProfilePicture}>
-            <Image
-              source={{
-                uri: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1160&auto=format&fit=crop",
-              }}
-              style={{
-                width: "100%",
-                height: "100%",
-                overflow: "hidden",
-                borderRadius: 12,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-
         {/* Search Bar */}
         <View style={{}}>
           <HomeScreenHeader
             scrollOffset={scrollOffset}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
+            title={""}
           />
         </View>
-
-        {/* Genre Filter */}
-        {/* <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.genreFilterContainer}
-          contentContainerStyle={styles.genreFilterContent}
-        >
-          <TouchableOpacity
-            style={[styles.genreTag, !selectedGenre && styles.genreTagActive]}
-            onPress={() => setSelectedGenre(null)}
-          >
-            <Text
-              style={[
-                styles.genreTagText,
-                !selectedGenre && styles.genreTagTextActive,
-              ]}
-            >
-              All
-            </Text>
-          </TouchableOpacity>
-          {allGenres.map((genre: string) => (
-            <TouchableOpacity
-              key={genre}
-              style={[
-                styles.genreTag,
-                selectedGenre === genre && styles.genreTagActive,
-              ]}
-              onPress={() => setSelectedGenre(genre)}
-            >
-              <Text
-                style={[
-                  styles.genreTagText,
-                  selectedGenre === genre && styles.genreTagTextActive,
-                ]}
-              >
-                {genre}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView> */}
 
         <View style={{ height: 8 }} />
 
@@ -287,6 +248,11 @@ export default function HomeScreen() {
               <View style={styles.noResultsContainer}>
                 <AlertCircle size={48} color="#ccd0d4" />
                 <Text style={styles.noResultsText}>No movies found</Text>
+                <ActivityIndicator
+                  size="large"
+                  color="#0a7ea4"
+                  style={{ marginVertical: 12 }}
+                />
                 <Text style={styles.noResultsMessage}>
                   Try a different search or clear filters to see more movies.
                 </Text>
@@ -379,7 +345,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 2,
   },
   greeting: {
     // fontSize: 12,
@@ -427,12 +393,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   SeeAll: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#0a7ea4",
     fontFamily: "Poppins-Medium",
   },
   movieList: {
     paddingHorizontal: 20,
+    alignItems: "center",
   },
   movieCard: {
     width: 220,
@@ -621,10 +588,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Regular",
   },
   noResultsContainer: {
-    width: 220,
+    width: "100%",
     height: 280,
     justifyContent: "center",
     alignItems: "center",
+    // backgroundColor: "#fff",
+    // borderRadius: 12,
+    alignSelf: "center",
+    // marginLeft: 16,
   },
   noResultsText: {
     marginTop: 8,

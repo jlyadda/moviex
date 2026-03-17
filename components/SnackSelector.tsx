@@ -1,44 +1,62 @@
-import { Minus, Plus } from 'lucide-react-native';
-import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Minus, Plus } from "lucide-react-native";
+import { useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface Snack {
   id: string;
   name: string;
   price: number;
   image: string;
+  category: string;
 }
 
 const snacks: Snack[] = [
   {
-    id: '1',
-    name: 'Popcorn (Large)',
+    id: "1",
+    name: "Popcorn (Large)",
     price: 5000,
-    image: 'https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    image:
+      "https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    category: "",
   },
   {
-    id: '2',
-    name: 'Popcorn (Caramel)',
+    id: "2",
+    name: "Popcorn (Caramel)",
     price: 7000,
-    image: 'https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    image:
+      "https://images.pexels.com/photos/33129/popcorn-movie-party-entertainment.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    category: "popcorn",
   },
   {
-    id: '3',
-    name: 'Pepsi ',
+    id: "3",
+    name: "Pepsi ",
     price: 3000,
-    image: 'https://images.pexels.com/photos/2983100/pexels-photo-2983100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    image:
+      "https://images.pexels.com/photos/2983100/pexels-photo-2983100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    category: "beverage",
   },
   {
-    id: '4',
-    name: 'Nivana Water',
+    id: "4",
+    name: "Nivana Water",
     price: 3000,
-    image: 'https://images.pexels.com/photos/1200348/pexels-photo-1200348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    image:
+      "https://images.pexels.com/photos/1200348/pexels-photo-1200348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    category: "water",
   },
   {
-    id: '5',
-    name: 'Sting',
+    id: "5",
+    name: "Sting",
     price: 3000,
-    image: 'https://images.pexels.com/photos/4518656/pexels-photo-4518656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    image:
+      "https://images.pexels.com/photos/4518656/pexels-photo-4518656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    category: "energy",
   },
 ];
 
@@ -52,23 +70,23 @@ export default function SnackSelector({ onSnacksChange }: SnackSelectorProps) {
   const updateQuantity = (id: string, delta: number) => {
     const currentQty = quantities[id] || 0;
     const newQty = Math.max(0, currentQty + delta);
-    
+
     const newQuantities = {
       ...quantities,
       [id]: newQty,
     };
-    
+
     if (newQty === 0) {
       delete newQuantities[id];
     }
-    
+
     setQuantities(newQuantities);
-    
+
     const total = Object.entries(newQuantities).reduce((sum, [id, qty]) => {
-      const snack = snacks.find(s => s.id === id);
+      const snack = snacks.find((s) => s.id === id);
       return sum + (snack?.price || 0) * qty;
     }, 0);
-    
+
     onSnacksChange(total, newQuantities);
   };
 
@@ -79,7 +97,9 @@ export default function SnackSelector({ onSnacksChange }: SnackSelectorProps) {
           <Image source={{ uri: snack.image }} style={styles.snackImage} />
           <View style={styles.snackInfo}>
             <Text style={styles.snackName}>{snack.name}</Text>
-            <Text style={styles.snackPrice}>UGX {snack.price.toLocaleString()}</Text>
+            <Text style={styles.snackPrice}>
+              UGX {snack.price.toLocaleString()}
+            </Text>
           </View>
           <View style={styles.quantityControl}>
             <TouchableOpacity
@@ -87,16 +107,17 @@ export default function SnackSelector({ onSnacksChange }: SnackSelectorProps) {
               onPress={() => updateQuantity(snack.id, -1)}
               disabled={!quantities[snack.id]}
             >
-              <Minus size={16} color={quantities[snack.id] ? '#e63946' : '#ced4da'} />
+              <Minus
+                size={16}
+                color={quantities[snack.id] ? "#0a7ea4" : "#ced4da"}
+              />
             </TouchableOpacity>
-            <Text style={styles.quantityText}>
-              {quantities[snack.id] || 0}
-            </Text>
+            <Text style={styles.quantityText}>{quantities[snack.id] || 0}</Text>
             <TouchableOpacity
               style={styles.quantityButton}
               onPress={() => updateQuantity(snack.id, 1)}
             >
-              <Plus size={16} color="#e63946" />
+              <Plus size={16} color="#0a7ea4" />
             </TouchableOpacity>
           </View>
         </View>
@@ -108,18 +129,18 @@ export default function SnackSelector({ onSnacksChange }: SnackSelectorProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
     padding: 16,
   },
   snackItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     marginBottom: 12,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -135,35 +156,35 @@ const styles = StyleSheet.create({
   },
   snackName: {
     fontSize: 16,
-    color: '#212529',
+    color: "#212529",
     marginBottom: 4,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
   },
   snackPrice: {
     fontSize: 14,
-    color: '#e63946',
-    fontFamily: 'Poppins-Regular',
+    color: "#0a7ea4",
+    fontFamily: "Poppins-Regular",
   },
   quantityControl: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
     borderRadius: 8,
     padding: 4,
   },
   quantityButton: {
     width: 28,
     height: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 6,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   quantityText: {
     width: 30,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 14,
-    color: '#212529',
-    fontFamily: 'Poppins-Medium',
+    color: "#212529",
+    fontFamily: "Poppins-Medium",
   },
 });

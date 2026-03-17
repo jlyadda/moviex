@@ -24,7 +24,7 @@ const HomeScreenHeader = ({
 
   return (
     <Animated.View
-      style={[styles.headerContainer, { paddingTop: insets.top, width: "80%" }]}
+      style={[styles.headerContainer, { paddingTop: 12, width: "90%" }]}
     >
       <View style={[styles.headerContent]}>
         {/* <TouchableOpacity

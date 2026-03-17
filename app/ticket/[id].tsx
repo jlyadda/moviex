@@ -1,15 +1,30 @@
 import ScreenBackButton from "@/components/ScreenBackButton";
 import { LinearGradient } from "expo-linear-gradient";
+import * as MediaLibrary from "expo-media-library";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Calendar, Clock, MapPin } from "lucide-react-native";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useRef, useState } from "react";
+import {
+  Alert,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { captureRef } from "react-native-view-shot";
 
 export default function TicketScreen() {
   const params = useLocalSearchParams() as { [key: string]: any };
+
+  const ticketRef = useRef<any>(null);
+  const [saving, setSaving] = useState(false);
 
   // Build ticket object from route params with sensible fallbacks
   const ticket = {
@@ -37,6 +52,44 @@ export default function TicketScreen() {
     })(),
   };
 
+  async function handleSaveTicket() {
+    if (Platform.OS === "web") {
+      Alert.alert(
+        "Not supported",
+        "Saving to gallery is not supported on web.",
+      );
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission required",
+          "Permission to access the gallery is required.",
+        );
+        setSaving(false);
+        return;
+      }
+
+      const uri = await captureRef(ticketRef, {
+        format: "png",
+        quality: 0.9,
+      });
+
+      // Save to library
+      const asset = await MediaLibrary.saveToLibraryAsync(uri);
+      Alert.alert("Saved", "Ticket saved to your gallery.");
+      setSaving(false);
+      return asset;
+    } catch (err) {
+      console.warn("Save ticket failed", err);
+      Alert.alert("Error", "Unable to save ticket. Try again.");
+      setSaving(false);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
@@ -46,7 +99,7 @@ export default function TicketScreen() {
           <ScreenBackButton />
           <Text style={styles.title}>Your Ticket</Text>
 
-          <View style={styles.ticketCard}>
+          <View ref={ticketRef} collapsable={false} style={styles.ticketCard}>
             <View>
               <Image
                 source={{
@@ -227,6 +280,21 @@ export default function TicketScreen() {
             </View>
           </View>
 
+          <View style={styles.actionsRow}>
+            <TouchableOpacity
+              onPress={handleSaveTicket}
+              style={[
+                styles.actionButton,
+                { marginRight: 12, backgroundColor: "#0a7ea4" },
+              ]}
+              disabled={saving}
+            >
+              <Text style={styles.actionText}>
+                {saving ? "Saving..." : "Save to Gallery"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <Text style={styles.instructions}>
             Show this ticket at the cinema entrance. We recommend arriving 15
             minutes before screening.
@@ -377,7 +445,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   actionButton: {
-    backgroundColor: "#e63946",
+    backgroundColor: "#0a7ea4",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,

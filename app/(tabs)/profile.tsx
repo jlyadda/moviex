@@ -1,58 +1,76 @@
-import { useRouter } from 'expo-router';
-import { Bell, ChevronRight, CreditCard, CircleHelp as HelpCircle, LogOut, Settings } from 'lucide-react-native';
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
-import PaymentMethodsModal from '../../components/PaymentMethodsModal';
+import { useRouter } from "expo-router";
+import {
+    Bell,
+    ChevronRight,
+    CreditCard,
+    CircleHelp as HelpCircle,
+    LogOut,
+    Settings,
+} from "lucide-react-native";
+import { useState } from "react";
+import {
+    Alert,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
+import PaymentMethodsModal from "../../components/PaymentMethodsModal";
 
 const profileOptions = [
   {
-    id: 'settings',
-    title: 'Account Settings',
+    id: "settings",
+    title: "Account Settings",
     icon: <Settings size={22} color="#212529" />,
   },
   {
-    id: 'payment',
-    title: 'Payment Methods',
+    id: "payment",
+    title: "Payment Methods",
     icon: <CreditCard size={22} color="#212529" />,
   },
   {
-    id: 'notifications',
-    title: 'Notifications',
+    id: "notifications",
+    title: "Notifications",
     icon: <Bell size={22} color="#212529" />,
   },
   {
-    id: 'help',
-    title: 'Help & Support',
+    id: "help",
+    title: "Help & Support",
     icon: <HelpCircle size={22} color="#212529" />,
   },
   {
-    id: 'logout',
-    title: 'Log Out',
-    icon: <LogOut size={22} color="#e63946" />,
-    textColor: '#e63946',
+    id: "logout",
+    title: "Log Out",
+    icon: <LogOut size={22} color="#0a7ea4" />,
+    textColor: "#0a7ea4",
   },
 ];
 
 export default function ProfileScreen() {
   const router = useRouter();
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
-  const [paymentMethods, setPaymentMethods] = useState<{
-    id: string;
-    type: 'card' | 'momo';
-    cardNumber?: string;
-    cardName?: string;
-    cardExpiry?: string;
-    phoneNumber?: string;
-    provider?: string;
-  }[]>([]);
-  
+  const [paymentMethods, setPaymentMethods] = useState<
+    {
+      id: string;
+      type: "card" | "momo";
+      cardNumber?: string;
+      cardName?: string;
+      cardExpiry?: string;
+      phoneNumber?: string;
+      provider?: string;
+    }[]
+  >([]);
+
   // User data (can be fetched from API or storage)
   const userData = {
-    name: 'Jonathan',
-    email: 'jonalyadda@gmail.com',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1160&auto=format&fit=crop',
+    name: "Jonathan",
+    email: "jonalyadda@gmail.com",
+    avatar:
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1160&auto=format&fit=crop",
     moviesWatched: 1,
     ticketsBooked: 1,
     cinemas: 0,
@@ -60,34 +78,30 @@ export default function ProfileScreen() {
 
   const handleOptionPress = (optionId: string) => {
     switch (optionId) {
-      case 'settings':
-        Alert.alert('Account Settings', 'Edit your account preferences');
+      case "settings":
+        Alert.alert("Account Settings", "Edit your account preferences");
         break;
-      case 'payment':
+      case "payment":
         setPaymentModalVisible(true);
         break;
-      case 'notifications':
-        Alert.alert('Notifications', 'Manage notification preferences');
+      case "notifications":
+        Alert.alert("Notifications", "Manage notification preferences");
         break;
-      case 'help':
-        Alert.alert('Help & Support', 'Contact our support team or view FAQs');
+      case "help":
+        Alert.alert("Help & Support", "Contact our support team or view FAQs");
         break;
-      case 'logout':
-        Alert.alert(
-          'Log Out',
-          'Are you sure you want to log out?',
-          [
-            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-            {
-              text: 'Log Out',
-              onPress: () => {
-                // Navigate to login or reset app
-                router.replace('/');
-              },
-              style: 'destructive',
+      case "logout":
+        Alert.alert("Log Out", "Are you sure you want to log out?", [
+          { text: "Cancel", onPress: () => {}, style: "cancel" },
+          {
+            text: "Log Out",
+            onPress: () => {
+              // Navigate to login or reset app
+              router.replace("/");
             },
-          ]
-        );
+            style: "destructive",
+          },
+        ]);
         break;
       default:
         break;
@@ -95,12 +109,12 @@ export default function ProfileScreen() {
   };
 
   const handleEditProfile = () => {
-    Alert.alert('Edit Profile', 'Profile editing feature coming soon!');
+    Alert.alert("Edit Profile", "Profile editing feature coming soon!");
   };
 
   const handleAddPaymentMethod = (method: {
     id: string;
-    type: 'card' | 'momo';
+    type: "card" | "momo";
     cardNumber?: string;
     cardName?: string;
     cardExpiry?: string;
@@ -113,14 +127,20 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Animated.View entering={FadeIn.duration(500)} style={styles.profileHeader}>
-          <Image 
-            source={{ uri: userData.avatar }} 
-            style={styles.profileImage} 
+        <Animated.View
+          entering={FadeIn.duration(500)}
+          style={styles.profileHeader}
+        >
+          <Image
+            source={{ uri: userData.avatar }}
+            style={styles.profileImage}
           />
           <Text style={styles.profileName}>{userData.name}</Text>
           <Text style={styles.profileEmail}>{userData.email}</Text>
-          <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={handleEditProfile}
+          >
             <Text style={styles.editButtonText}>Edit Profile</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -144,16 +164,16 @@ export default function ProfileScreen() {
 
         <View style={styles.optionsContainer}>
           {profileOptions.map((option) => (
-            <TouchableOpacity 
-              key={option.id} 
+            <TouchableOpacity
+              key={option.id}
               style={styles.optionItem}
               onPress={() => handleOptionPress(option.id)}
             >
               <View style={styles.optionIcon}>{option.icon}</View>
-              <Text 
+              <Text
                 style={[
-                  styles.optionText, 
-                  option.textColor && { color: option.textColor }
+                  styles.optionText,
+                  option.textColor && { color: option.textColor },
                 ]}
               >
                 {option.title}
@@ -180,10 +200,10 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
   },
   profileHeader: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 30,
   },
   profileImage: {
@@ -194,77 +214,77 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 24,
-    fontWeight: '600',
-    color: '#212529',
+    fontWeight: "600",
+    color: "#212529",
     marginBottom: 5,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
   },
   profileEmail: {
     fontSize: 16,
-    color: '#6c757d',
+    color: "#6c757d",
     marginBottom: 15,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
   },
   editButton: {
     paddingVertical: 8,
     paddingHorizontal: 20,
-    backgroundColor: '#e9ecef',
+    backgroundColor: "#e9ecef",
     borderRadius: 20,
   },
   editButtonText: {
-    color: '#495057',
+    color: "#495057",
     fontSize: 14,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
   },
   statsContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    backgroundColor: "#fff",
     borderRadius: 12,
     marginHorizontal: 20,
     marginBottom: 20,
     paddingVertical: 15,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
   statItem: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#e63946',
+    fontWeight: "600",
+    color: "#0a7ea4",
     marginBottom: 5,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
   },
   statLabel: {
     fontSize: 12,
-    color: '#6c757d',
-    fontFamily: 'Poppins-Regular',
+    color: "#6c757d",
+    fontFamily: "Poppins-Regular",
   },
   statDivider: {
     width: 1,
-    height: '70%',
-    backgroundColor: '#dee2e6',
+    height: "70%",
+    backgroundColor: "#dee2e6",
   },
   optionsContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     marginHorizontal: 20,
     marginBottom: 20,
     paddingVertical: 10,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
   optionItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
   },
@@ -273,20 +293,20 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    color: '#212529',
-    fontFamily: 'Poppins-Medium',
+    color: "#212529",
+    fontFamily: "Poppins-Medium",
     flex: 1,
   },
   chevron: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   versionContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   versionText: {
     fontSize: 14,
-    color: '#adb5bd',
-    fontFamily: 'Poppins-Regular',
+    color: "#adb5bd",
+    fontFamily: "Poppins-Regular",
   },
 });

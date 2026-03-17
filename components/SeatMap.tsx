@@ -95,7 +95,7 @@ export default function SeatMap({ onSeatsChange }: SeatMapProps) {
       <Svg height={30} width="100%" viewBox={`0 0 ${width} 30`}>
         <Path
           d={`M 0,30 Q ${width / 2},0 ${width},30 L ${width},30 L 0,30 Z`}
-          fill="red"
+          fill="#0a7ea4"
         />
       </Svg>
 
@@ -194,10 +194,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#e63946",
+    borderColor: "#0a7ea4",
   },
   selectedSeat: {
-    backgroundColor: "#e63946",
+    backgroundColor: "#0a7ea4",
   },
   occupiedSeat: {
     backgroundColor: "#dee2e6",
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   seatText: {
     fontSize: 8,
-    color: "#e63946",
+    color: "#0a7ea4",
     fontFamily: "Poppins-Medium",
   },
   selectedSeatText: {

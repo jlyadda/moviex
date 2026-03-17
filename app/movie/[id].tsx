@@ -5,8 +5,8 @@ import { onValue, ref } from "firebase/database";
 import { Calendar, Clock, Star, Users } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
-  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -18,22 +18,21 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Button, ContextMenu, Host } from "@expo/ui/swift-ui";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { database } from "../../firebaseConfig";
 
 // Mock dates (previous data remains the same)
 const { width } = Dimensions.get("window");
 
-const dates = [
-  { date: "Mon", day: "15", month: "Nov", isSelected: true },
-  { date: "Tue", day: "16", month: "Nov", isSelected: false },
-  { date: "Wed", day: "17", month: "Nov", isSelected: false },
-  { date: "Thu", day: "18", month: "Nov", isSelected: false },
-  { date: "Fri", day: "19", month: "Nov", isSelected: false },
-  { date: "Sat", day: "20", month: "Nov", isSelected: false },
-  { date: "Sun", day: "21", month: "Nov", isSelected: false },
-];
+// const dates = [
+//   { date: "Mon", day: "15", month: "Nov", isSelected: true },
+//   { date: "Tue", day: "16", month: "Nov", isSelected: false },
+//   { date: "Wed", day: "17", month: "Nov", isSelected: false },
+//   { date: "Thu", day: "18", month: "Nov", isSelected: false },
+//   { date: "Fri", day: "19", month: "Nov", isSelected: false },
+//   { date: "Sat", day: "20", month: "Nov", isSelected: false },
+//   { date: "Sun", day: "21", month: "Nov", isSelected: false },
+// ];
 
 export default function MovieDetailScreen() {
   const params = useLocalSearchParams();
@@ -77,6 +76,11 @@ export default function MovieDetailScreen() {
     return (
       <View style={styles.errorContainer}>
         <ScreenBackButton />
+        <ActivityIndicator
+          size="large"
+          color="#0a7ea4"
+          style={{ marginVertical: 16 }}
+        />
         <Text style={styles.errorText}>Loading...</Text>
       </View>
     );
@@ -106,64 +110,47 @@ export default function MovieDetailScreen() {
         <StatusBar hidden />
         <Stack.Screen options={{ headerShown: false }} />
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.imageContainer}>
-            <Animated.Image
-              resizeMode={"cover"}
-              source={{ uri: movie.coverImage || movie.image }}
-              style={[styles.coverImage]}
-            />
-            <LinearGradient
-              colors={["transparent", "rgba(0,0,0,0.85)"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-              style={styles.gradient}
-            />
+        <View style={styles.imageContainer}>
+          <Animated.Image
+            resizeMode={"cover"}
+            source={{ uri: movie.coverImage || movie.image }}
+            style={[styles.coverImage]}
+          />
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.85)"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.gradient}
+          />
 
+          <TouchableOpacity
+            style={styles.backBtnOverlay}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Text style={styles.backBtnText}>‹</Text>
+          </TouchableOpacity>
+          <Animated.View style={styles.iconButton}>
             <TouchableOpacity
-              style={styles.backBtnOverlay}
-              onPress={() => router.back()}
+              onPress={() => {
+                setIsLiked(!isLiked);
+              }}
               accessibilityRole="button"
-              accessibilityLabel="Go back"
+              accessibilityLabel={isLiked ? "Unlike" : "Like"}
             >
-              <Text style={styles.backBtnText}>‹</Text>
-            </TouchableOpacity>
-            <Animated.View style={styles.iconButton}>
-              {Platform.OS === "ios" ? (
-                <Host matchContents>
-                  <ContextMenu>
-                    <ContextMenu.Items>
-                      <Button
-                        variant="bordered"
-                        systemImage="heart"
-                        onPress={() => console.log("Pressed2")}
-                      >
-                        Love it
-                      </Button>
-                    </ContextMenu.Items>
-                    <ContextMenu.Trigger>
-                      <Button variant="bordered">Show Menu</Button>
-                    </ContextMenu.Trigger>
-                  </ContextMenu>
-                </Host>
+              {isLiked ? (
+                <Animated.View entering={ZoomIn.springify()}>
+                  <Ionicons name="heart" size={24} color="#fff" />
+                </Animated.View>
               ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsLiked(!isLiked);
-                  }}
-                >
-                  {isLiked ? (
-                    <Animated.View entering={ZoomIn.springify()}>
-                      <Ionicons name="heart" size={24} color="#fff" />
-                    </Animated.View>
-                  ) : (
-                    <Ionicons name="heart-outline" size={24} color="#fff" />
-                  )}
-                </TouchableOpacity>
+                <Ionicons name="heart-outline" size={24} color="#fff" />
               )}
-            </Animated.View>
-          </View>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
 
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.contentContainer}>
             <Animated.View entering={FadeIn.duration(500)}>
               <Text numberOfLines={2} style={styles.title}>
@@ -200,7 +187,7 @@ export default function MovieDetailScreen() {
 
               <View style={styles.detailsContainer}>
                 <View style={styles.detailItem}>
-                  <Users size={16} color="#e63946" />
+                  <Users size={16} color="#0a7ea4" />
                   <View style={{ marginLeft: 8, flex: 1 }}>
                     <Text style={styles.detailLabel}>Director</Text>
                     <Text style={styles.detailValue}>
@@ -210,7 +197,7 @@ export default function MovieDetailScreen() {
                 </View>
 
                 <View style={styles.detailItem}>
-                  <Calendar size={16} color="#e63946" />
+                  <Calendar size={16} color="#0a7ea4" />
                   <View style={{ marginLeft: 8, flex: 1 }}>
                     <Text style={styles.detailLabel}>
                       {movie.status === "Coming Soon"
@@ -242,14 +229,21 @@ export default function MovieDetailScreen() {
             </Animated.View>
           </View>
         </ScrollView>
-        <View style={{ marginBottom: 20, width: "50%", alignSelf: "center" }}>
+        <View
+          style={{
+            marginBottom: 10,
+            width: "50%",
+            alignSelf: "center",
+            justifyContent: "flex-end",
+          }}
+        >
           <TouchableOpacity
             style={[
               styles.bookButton,
               {
                 alignSelf: "stretch",
                 marginTop: 4,
-                marginBottom: 16,
+                // marginBottom: 4,
                 alignContent: "center",
               },
             ]}
@@ -504,7 +498,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   selectedDate: {
-    backgroundColor: "#e63946",
+    backgroundColor: "#0a7ea4",
   },
   dateDay: {
     fontSize: 14,
@@ -543,7 +537,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   selectedTime: {
-    backgroundColor: "#e63946",
+    backgroundColor: "#0a7ea4",
   },
   unavailableTime: {
     backgroundColor: "#f1f3f5",
@@ -600,7 +594,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   bookButton: {
-    backgroundColor: "#e63946",
+    backgroundColor: "#0a7ea4",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 12,
@@ -654,7 +648,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-SemiBold",
   },
   nextButton: {
-    backgroundColor: "#e63946",
+    backgroundColor: "#0a7ea4",
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -695,7 +689,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#e63946",
+    backgroundColor: "#0a7ea4",
     borderRadius: 2,
   },
   progressText: {
